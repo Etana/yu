@@ -17,7 +17,7 @@ functions = {
 
 operations = {
     '+': '__add__', '*': '__mul__', '-': '__sub__', '/': '__div__',
-    '**': '__pow__', '//': '__floordiv__', '%': '__mod__', 'in': '__contains__'
+    '**': '__pow__', '//': '__floordiv__', '%': '__mod__',
 }
 
 def add_reducer(op, func):
