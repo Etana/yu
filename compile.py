@@ -30,11 +30,11 @@ def C(function, arguments):
     return functions[function](*arguments)
 
 def expand(args):
-    for index, arg in enumerate(args):
+    for index, arg in reversed(list(enumerate(args))):
         if '..' in arg:
             first, _, after = arg.partition('..')
             second, _, after = after.partition('..')
-            args[index] = list(range(int(first), int(second)+1))
+            args[index:index+1] = list(range(int(first), int(second)+1))
         if arg.isdigit():
             args[index] = int(arg)
     return args
