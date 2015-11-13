@@ -1,7 +1,11 @@
 #!/bin/python
 
 from functools import reduce
+import itertools
+import logging
 import sys
+
+_logger = logging.getLogger(__name__)
 
 if len(sys.argv) < 2:
     print('./compile.py {yu source file}')
@@ -27,6 +31,8 @@ for op, func in operations.items():
     add_reducer(op, func)
 
 def C(function, arguments):
+    if function not in functions:
+        return expand([function])
     return functions[function](*arguments)
 
 def expand(args):
@@ -45,8 +51,16 @@ for script in content.split('\n\n'):
         continue
     ret = None
     for code in script.split('|'):
+        if code.startswith('> '):
+            code = code[2:]
+            divide = True
+        else:
+            divide = False
         tokens = code.split()
         args = expand(tokens[1:])
-        if ret is not None:
-            args = ret + args
-        ret = C(tokens[0], args)
+        if divide and ret:
+            ret = list(itertools.chain(*list(C(tokens[0], [re] + args) for re in ret)))
+        else:
+            if ret is not None:
+                args = ret + args
+            ret = C(tokens[0], args)
